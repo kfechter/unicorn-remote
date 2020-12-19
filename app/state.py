@@ -7,23 +7,43 @@ import os
 class State:
     ''' Handles the Unicorn HAT state'''
 
-    def __init__(self, is_hd=True):
+    def get_mode(self, mode):
+        supported_modes = {
+            1: "hd"
+            2: "mini"
+            3: "phat"
+            4: "original"
+        }
+        return supported_modes.get(mode, "original")
+
+    def __init__(self, mode=4):
         self._process = None
-        self.set_model(is_hd)
+        self.set_model(get_mode(mode))
 
 
-    def set_model(self, is_hd):
-        self.is_hd = is_hd
-        if self.is_hd is True:
+    def set_model(self, mode):
+        self.mode = mode
+        if mode is "hd":
             import unicornhathd
             import app.programs.hd
             self._unicornhat = unicornhathd
             self._app_programs = app.programs.hd.list
-        else:
+        elif mode is "original":
             import unicornhat
             import app.programs.original
             self._unicornhat = unicornhat
             self._app_programs = app.programs.original.list
+        elif mode is "mini":
+            import unicornhathd
+            import app.programs.mini
+            self._unicornhat = unicornhathd
+            self._app_programs = app.programs.mini.list
+        elif mode is "phat":
+            import unicornhat
+            import app.programs.phat
+            self._unicornhat = unicornhat
+            self._app_programs = app.programs.phat.list
+            self._unicornhat.set_layout(self._unicornhat.PHAT)
 
 
     def start_program(self, name, params={}):
