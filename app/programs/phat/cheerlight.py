@@ -51,8 +51,6 @@ def parseColour(feedItem):
 
     for name in namesToRGB.keys():
         if feedItem["field1"] == name:
-            if mode != 0 and name == 'green':	#ignore green when in lights or star mode
-                name = "yellow" 
             pixels.insert(0, namesToRGB[name])    #add the colour to the head
             break
 
